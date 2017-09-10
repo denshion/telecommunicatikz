@@ -5,15 +5,25 @@ telecommunications Devices pictograms]
 \usetikzlibrary{svg.path}
 \usetikzlibrary{calc}
 
+% Alternating Current and Direct Current signs
 \newcommand{\SignAC}{{\bf\Large$\approx$}}
 \newcommand{\SignDC}{{\bf\Large$-$}}
 
-\newcommand{\Device}[3][]{ % Center point coords; name
+% Accepts 3 arguments:
+% Optional: text to put inside the box
+% Mandatory:
+% * Coordinates of the center of the device, in TikZ format
+% * Device node name (used to refer the device node later and can't be empty)
+% Example:
+% \Device[Sample]{(0, 0)}{SampleDevice}
+\newcommand{\Device}[3][]{
   \node (#3) at #2 [minimum width=12mm, minimum height=12mm] {#1};
   \draw[very thick] (#3.north east) -- (#3.north west) -- (#3.south west) --
   (#3.south east) -- cycle;
 }
 
+% A large G letter denoting a generator.
+% Internally it's described through an SVG path composed with Inkscape.
 \newcommand{\Gletter}[1]{
   \begin{scope}[shift={#1}]
     \begin{scope}[shift={(0, -12mm)}]
@@ -22,6 +32,8 @@ telecommunications Devices pictograms]
   \end{scope}
 }
 
+% A small G letter denoting a generator.
+% Internally it's described through an SVG path composed with Inkscape.
 \newcommand{\SmallGletter}[1]{
   \begin{scope}[shift={#1}]
     \begin{scope}[shift={(0, -6mm)}]
@@ -30,6 +42,7 @@ telecommunications Devices pictograms]
   \end{scope}
 }
 
+% A Wave sign for filters and sine wave generators.
 \newcommand{\Wave}[1]{
   \begin{scope}[shift={#1}]
     \draw[thick] (0, 0) arc (40:140:3mm);
@@ -37,6 +50,13 @@ telecommunications Devices pictograms]
   \end{scope}
 }
 
+% Adds an arrow to denote that the device has a regulated parameter.
+% Arguments:
+% Optional: regulated parameter. Will be typeset beside the northwest corner of the device.
+% Mandatory: device node name.
+% Example:
+% \GeneratorSin{(0, 0)}{RFgen}
+% \MakeRegulated[$f$]{RFGen} % Sine wave generator with controlled frequency
 \newcommand{\MakeRegulated}[2][]{
   \begin{scope}[shift={(#2.north west)}]
     \draw[very thick, -latex] (-1mm, -5mm) -- (7mm, 3mm);
@@ -44,28 +64,34 @@ telecommunications Devices pictograms]
   \end{scope}
 }
 
+% Draws a right arrow at the bottom of the device,
+% to denote a directed converter (e.g. a rectifier)
 \newcommand{\MakeRightDirected}[1]{
   \draw[very thick, ->] (#1.south west) -- (#1.south);
 }
 
-
+% A generator with large G letter.
 \newcommand{\Generator}[2]{
   \Device{#1}{#2}
   \Gletter{(#2.center)};
 }
 
+% A generator denoted by a small G letter.
+% Can be used as a base for generators with a specified waveform.
 \newcommand{\generator}[2]{
   \Device{#1}{#2}
   \path (#2.center) -- (#2.north) coordinate[midway](tempA);
   \SmallGletter{(tempA)}
 }
 
+% Square waveform generator.
 \newcommand{\GeneratorSquare}[2]{
   \generator{#1}{#2}
   \path (#2.center) ++ (-4mm, -4mm) coordinate (tempB);
   \draw[thick] (tempB) to +(2.5mm, 0) to +(2.5mm, 3mm) to +(5.5mm, 3mm) to +(5.5mm, 0) to +(8mm, 0);
 }
 
+% Audio frequency sine wave generator.
 \newcommand{\GeneratorAF}[2]{
   \generator{#1}{#2}
   \path (#2.center) ++ (0, -2mm) coordinate (tempB);
@@ -74,23 +100,29 @@ telecommunications Devices pictograms]
   \Wave{(tempC)}
 }
 
+% Sine wave generator
 \newcommand{\GeneratorSin}[2]{
   \generator{#1}{#2}
   \path (#2.center) ++ (0, -3mm) coordinate (tempC);
   \Wave{(tempC)}
 }
 
+% Abstract transducer or convertor.
 \newcommand{\Transducer}[2]{
   \Device{#1}{#2}
   \draw[very thick] (#2.south west) -- (#2.north east);
 }
 
+% Amplifier with a large triangle inside.
 \newcommand{\Amplifier}[2]{
   \Device{#1}{#2}
   \path (#2.center)++ (-3mm, -3mm) coordinate (tempA);
   \draw[very thick] (tempA) to +(0mm, 6mm) to +(6mm, 3mm) to cycle;
 }
 
+% Amplifier with a small triangle inside.
+% Optional parameter: amplitude charactreistic of the amplifier,
+% e.g., log. Will be typeset at the northeast corner inside the box.
 \newcommand{\amplifier}[3][]{
   \Device{#2}{#3}
   \path (#3.center) ++ (1mm, -4mm) coordinate (tempA);
@@ -98,6 +130,7 @@ telecommunications Devices pictograms]
   \node[below right] at (#3.north west) {#1};
 }
 
+% Abstract filter.
 \newcommand{\Filter}[2]{
   \Device{#1}{#2}
   \Wave{(#2.center)}
@@ -148,11 +181,18 @@ telecommunications Devices pictograms]
   \draw[very thick] (#2.north west) -- (#2.south) -- (#2.north east);
 }
 
+% Modulator. According to GOST, lines are connected:
+% Carrier frequency: to the south anchor
+% Modulating and output signals: to east end west anchors
 \newcommand{\Modulator}[2]{
   \Device{#1}{#2}
   \draw[very thick] (#2.south west) -- (#2.north) -- (#2.south east);
 }
 
+% An attenuator with large dB sign inside.
+% The dB sign is internally described as an SVG path imported from Inkscape.
+% TODO: make the dB sign a little smaller
+% TODO: create a searate macro for the dB sign?
 \newcommand{\Attenuator}[2]{
   \Device{#1}{#2}
   \begin{scope}[shift={#1}]
@@ -163,6 +203,8 @@ telecommunications Devices pictograms]
   \end{scope}
 }
 
+% A rectifier. AC input is connected to the west,
+% DC output -- to the east.
 \newcommand{\Rectifier}[2]{
   \Transducer{#1}{#2}
   \MakeRightDirected{#2}
@@ -170,6 +212,8 @@ telecommunications Devices pictograms]
   \node[above left] at (#2.south east) {\SignDC};
 }
 
+% An inverter. DC input is connected to the west,
+% AC output -- to the east.
 \newcommand{\Inverter}[2]{
   \Transducer{#1}{#2}
   \MakeRightDirected{#2}
@@ -177,6 +221,7 @@ telecommunications Devices pictograms]
   \node[above left] at (#2.south east) {\SignAC};
 }
 
+% A DC-DC converter.
 \newcommand{\DCDCConverter}[2]{
   \Transducer{#1}{#2}
   \MakeRightDirected{#2}
@@ -206,7 +251,10 @@ telecommunications Devices pictograms]
   \node[above left] at (#2.south east) {$\cfrac{f}{n}$};
 }
 
-\newcommand{\Splitter}[2]{ % Output nodes are at 30 and -30
+% A two-way power splitter.
+% Input is connected to the west anchor;
+% outputs -- to the 30 and -30 anchors.
+\newcommand{\Splitter}[2]{
   \Device{#1}{#2}
   \path (#2.center) ++ (-4mm, 0) coordinate (tempA);
   \path (#2.center) ++ (+4mm, +3.46mm) coordinate (tempB);
@@ -215,4 +263,5 @@ telecommunications Devices pictograms]
   \draw[ultra thick] (tempA) -- (#2.center) -- (tempC);
 }
 
+% By default definition, just a very thick line to denote a cable.
 \newcommand{\Line}[1][]{\draw[very thick, #1]}
