@@ -11,7 +11,7 @@ A bunch of macros for drawing schemes with telecommunications devices according 
   ```
   \Device[Sample]{(2, 0)}{sample};
   \GeneratorSin{(0, 0)}{gen} % The semicolon can be omitted here.
-  \Amplifier[log]{(4, 0)}{logamp}
+  \amplifier[log]{(4, 0)}{logamp}
   ```
   and then connected with lines (`\Line` is by definition just a `\draw[very thick, #1]`):
   ```
@@ -21,7 +21,7 @@ A bunch of macros for drawing schemes with telecommunications devices according 
   ```
   Anchors can often be omitted:
   ```
-  \Line (gen) -- (sample) -- (logamp) to +(1cm, 0) node[right] {To ADC};
+  \Line (gen) -- (sample) -- (logamp);
   ```
   
   Devices can also be decorated, for example, with `\MakeRegulated`:
@@ -46,7 +46,7 @@ A bunch of macros for drawing schemes with telecommunications devices according 
   ```
   \Device[Sample]{(2, 0)}{sample};
   \GeneratorSin{(0, 0)}{gen} % Точку с запятой здесь можно не ставить.
-  \Amplifier[log]{(4, 0)}{logamp}
+  \amplifier[log]{(4, 0)}{logamp}
   ```
   а затем соединяются линиями (`\Line` - это `\draw[very thick, #1]`, ни больше ни меньше):
   ```
@@ -54,9 +54,9 @@ A bunch of macros for drawing schemes with telecommunications devices according 
   \Line (sample.east) -- (logamp.west);
   \Line[-latex] (logamp.east) to +(1cm, 0) node[right] {To ADC};
   ```
-  Якори часто можно не указывать:
+  Якори зачастую можно не указывать:
   ```
-  \Line (gen) -- (sample) -- (logamp) to +(1cm, 0) node[right] {To ADC};
+  \Line (gen) -- (sample) -- (logamp);
   ```
   
   Также устройства можно декорировать, например, при помощи `\MakeRegulated`:
