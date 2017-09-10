@@ -1,0 +1,218 @@
+\ProvidesPackage{telecommunikatikz}[2017/09/09 Collection of GOST TikZ
+telecommunications Devices pictograms]
+
+\RequirePackage{tikz}
+\usetikzlibrary{svg.path}
+\usetikzlibrary{calc}
+
+\newcommand{\SignAC}{{\bf\Large$\approx$}}
+\newcommand{\SignDC}{{\bf\Large$-$}}
+
+\newcommand{\Device}[3][]{ % Center point coords; name
+  \node (#3) at #2 [minimum width=12mm, minimum height=12mm] {#1};
+  \draw[very thick] (#3.north east) -- (#3.north west) -- (#3.south west) --
+  (#3.south east) -- cycle;
+}
+
+\newcommand{\Gletter}[1]{
+  \begin{scope}[shift={#1}]
+    \begin{scope}[shift={(0, -12mm)}]
+      \draw[fill=black] svg[scale=1mm] "M 2.4287927,14.728516 H 0.21704068 q -0.620117,0 -1.049031,-0.506429 -0.20670598,-0.242879 -0.27905298,-0.516764 l -0.9198403,-3.410645 q -0.036174,-0.134358 -0.036174,-0.253214 0,-0.3462323 0.2325439,-0.5581056 Q -1.5968016,9.271485 -1.2454019,9.271485 H 0.52193168 L 1.2557377,12.000001 H 0.63045268 q -0.341065,0 -0.341065,0.341064 0,0.341064 0.341065,0.341064 H 1.7880047 q 0.268717,0 0.268717,-0.248046 0,-0.07235 -0.0052,-0.09302 L 1.1368517,8.9304206 Q 1.0438317,8.5893561 0.68726665,8.5893561 H -1.431437 q -0.7183024,0 -1.1472168,0.7493083 -0.1912029,0.3307291 -0.1912029,0.6717936 0,0.149862 0.036173,0.28422 l 0.9146734,3.410645 q 0.2997233,1.121378 1.21439598,1.514119 0.449585,0.191203 1.007691,0.191203 H 2.4287927 q 0.341064,0 0.341064,-0.341065 0,-0.341064 -0.341064,-0.341064 z";
+    \end{scope}
+  \end{scope}
+}
+
+\newcommand{\SmallGletter}[1]{
+  \begin{scope}[shift={#1}]
+    \begin{scope}[shift={(0, -6mm)}]
+      \draw[fill=black] svg[scale=0.5mm] "M 2.4287927,14.728516 H 0.21704068 q -0.620117,0 -1.049031,-0.506429 -0.20670598,-0.242879 -0.27905298,-0.516764 l -0.9198403,-3.410645 q -0.036174,-0.134358 -0.036174,-0.253214 0,-0.3462323 0.2325439,-0.5581056 Q -1.5968016,9.271485 -1.2454019,9.271485 H 0.52193168 L 1.2557377,12.000001 H 0.63045268 q -0.341065,0 -0.341065,0.341064 0,0.341064 0.341065,0.341064 H 1.7880047 q 0.268717,0 0.268717,-0.248046 0,-0.07235 -0.0052,-0.09302 L 1.1368517,8.9304206 Q 1.0438317,8.5893561 0.68726665,8.5893561 H -1.431437 q -0.7183024,0 -1.1472168,0.7493083 -0.1912029,0.3307291 -0.1912029,0.6717936 0,0.149862 0.036173,0.28422 l 0.9146734,3.410645 q 0.2997233,1.121378 1.21439598,1.514119 0.449585,0.191203 1.007691,0.191203 H 2.4287927 q 0.341064,0 0.341064,-0.341065 0,-0.341064 -0.341064,-0.341064 z";
+    \end{scope}
+  \end{scope}
+}
+
+\newcommand{\Wave}[1]{
+  \begin{scope}[shift={#1}]
+    \draw[thick] (0, 0) arc (40:140:3mm);
+    \draw[thick] (0, 0) arc (-140:-40:3mm);
+  \end{scope}
+}
+
+\newcommand{\MakeRegulated}[2][]{
+  \begin{scope}[shift={(#2.north west)}]
+    \draw[very thick, -latex] (-1mm, -5mm) -- (7mm, 3mm);
+    \path (#2.north west) ++ (0, 0.5mm) node[left] {#1};
+  \end{scope}
+}
+
+\newcommand{\MakeRightDirected}[1]{
+  \draw[very thick, ->] (#1.south west) -- (#1.south);
+}
+
+
+\newcommand{\Generator}[2]{
+  \Device{#1}{#2}
+  \Gletter{(#2.center)};
+}
+
+\newcommand{\generator}[2]{
+  \Device{#1}{#2}
+  \path (#2.center) -- (#2.north) coordinate[midway](tempA);
+  \SmallGletter{(tempA)}
+}
+
+\newcommand{\GeneratorSquare}[2]{
+  \generator{#1}{#2}
+  \path (#2.center) ++ (-4mm, -4mm) coordinate (tempB);
+  \draw[thick] (tempB) to +(2.5mm, 0) to +(2.5mm, 3mm) to +(5.5mm, 3mm) to +(5.5mm, 0) to +(8mm, 0);
+}
+
+\newcommand{\GeneratorAF}[2]{
+  \generator{#1}{#2}
+  \path (#2.center) ++ (0, -2mm) coordinate (tempB);
+  \path (#2.center) ++ (0, -3mm) coordinate (tempC);
+  \Wave{(tempB)}
+  \Wave{(tempC)}
+}
+
+\newcommand{\GeneratorSin}[2]{
+  \generator{#1}{#2}
+  \path (#2.center) ++ (0, -3mm) coordinate (tempC);
+  \Wave{(tempC)}
+}
+
+\newcommand{\Transducer}[2]{
+  \Device{#1}{#2}
+  \draw[very thick] (#2.south west) -- (#2.north east);
+}
+
+\newcommand{\Amplifier}[2]{
+  \Device{#1}{#2}
+  \path (#2.center)++ (-3mm, -3mm) coordinate (tempA);
+  \draw[very thick] (tempA) to +(0mm, 6mm) to +(6mm, 3mm) to cycle;
+}
+
+\newcommand{\amplifier}[3][]{
+  \Device{#2}{#3}
+  \path (#3.center) ++ (1mm, -4mm) coordinate (tempA);
+  \draw[thick] (tempA) to +(0mm, 3mm) to +(3mm, 1.5mm) to cycle;
+  \node[below right] at (#3.north west) {#1};
+}
+
+\newcommand{\Filter}[2]{
+  \Device{#1}{#2}
+  \Wave{(#2.center)}
+  \node at (#2.center) {\texttt{/}};
+}
+
+\newcommand{\LowPassFilter}[2]{
+  \Device{#1}{#2}
+  \path (#2.center) ++ (0, 2mm) coordinate (temp);
+  \Wave{(temp)}
+  \node at (temp) {\texttt{/}};
+  \path (#2.center) ++ (0, -2mm) coordinate (temp);
+  \Wave{(temp)}
+}
+
+\newcommand{\HighPassFilter}[2]{
+  \Device{#1}{#2}
+  \path (#2.center) ++ (0, 2mm) coordinate (temp);
+  \Wave{(temp)}
+  \path (#2.center) ++ (0, -2mm) coordinate (temp);
+  \Wave{(temp)}
+  \node at (temp) {\texttt{/}};
+}
+
+\newcommand{\BandPassFilter}[2]{
+  \Device{#1}{#2}
+  \Wave{(#2.center)}
+  \path (#2.center) ++ (0, 2.5mm) coordinate (temp);
+  \Wave{(temp)}
+  \node at (temp) {\texttt{/}};
+  \path (#2.center) ++ (0, -2.5mm) coordinate (temp);
+  \Wave{(temp)}
+  \node at (temp) {\texttt{/}};
+}
+
+\newcommand{\BandStopFilter}[2]{
+  \Device{#1}{#2}
+  \Wave{(#2.center)}
+  \node at (#2.center) {\texttt{/}};
+  \path (#2.center) ++ (0, 2.5mm) coordinate (temp);
+  \Wave{(temp)}
+  \path (#2.center) ++ (0, -2.5mm) coordinate (temp);
+  \Wave{(temp)}
+}
+
+\newcommand{\Demodulator}[2]{
+  \Device{#1}{#2}
+  \draw[very thick] (#2.north west) -- (#2.south) -- (#2.north east);
+}
+
+\newcommand{\Modulator}[2]{
+  \Device{#1}{#2}
+  \draw[very thick] (#2.south west) -- (#2.north) -- (#2.south east);
+}
+
+\newcommand{\Attenuator}[2]{
+  \Device{#1}{#2}
+  \begin{scope}[shift={#1}]
+    \begin{scope}[shift={(0, -12mm)}]
+      \draw[fill] svg[scale=1mm] "M -0.30747447,14.046387 -1.3099972,10.294679 q -0.2480469,-0.9198413 -0.7751465,-1.3125823 -0.5219319,-0.392741 -1.4521077,-0.392741 -0.5684407,0 -0.9611816,0.382406 -0.3875732,0.387573 -0.3875732,0.950846 0,0.1963713 0.046509,0.3720713 l 0.361735,1.364257 q 0.2428792,0.914673 0.7596435,1.307414 0.5167643,0.397909 1.4676106,0.397909 h 1.0593669 l 0.1808675,0.682128 q 0.0361735,0.134359 0.0361735,0.248047 0,0.434082 -0.5581055,0.434082 h -0.9663492 q -0.3410645,0 -0.3410645,0.341065 0,0.341064 0.3410645,0.341064 h 1.1472167 q 0.449585,0 0.76481123,-0.320394 0.31522623,-0.315226 0.31522623,-0.764811 0,-0.144694 -0.0361737,-0.279053 z m -1.71048983,-3.751708 0.6407877,2.387451 h -1.0593668 q -1.0593668,0 -1.3332519,-1.023194 L -4.136698,10.294679 q -0.056844,-0.211874 -0.056844,-0.3824063 0,-0.640788 0.8371582,-0.640788 1.0645345,0 1.3384195,1.0231943 z";
+      \draw[fill] svg[scale=1mm] "M 4.5449422,14.728516 H 1.9869589 L 1.4443564,12.68213 h 1.4107665 q 0.7079671,0 1.1678874,-0.496094 0.4444173,-0.480591 0.4444173,-1.198893 0,-0.201538 -0.041341,-0.3514 Q 4.0540163,9.3076587 2.9843142,8.8322357 2.4468793,8.5893557 1.7544152,8.5893557 h -1.76733398 q -0.26871744,0 -0.26871744,0.258383 0,0.04651 0.0103353,0.08268 L 1.377177,15.069581 q 0.08785,0.341064 0.4444173,0.341064 h 2.7233479 q 0.3410645,0 0.3410645,-0.341064 0,-0.341065 -0.3410645,-0.341065 z M 1.2583212,12.000001 0.52968354,9.2714847 H 1.9352825 q 0.795817,0 1.374593,0.63562 0.4599202,0.5012623 0.4599202,1.1472173 0,0.945679 -1.1007079,0.945679 z";
+    \end{scope}
+  \end{scope}
+}
+
+\newcommand{\Rectifier}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {\SignAC};
+  \node[above left] at (#2.south east) {\SignDC};
+}
+
+\newcommand{\Inverter}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {\SignDC};
+  \node[above left] at (#2.south east) {\SignAC};
+}
+
+\newcommand{\DCDCConverter}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {\SignDC};
+  \node[above left] at (#2.south east) {\SignDC};
+}
+
+\newcommand{\FrequencyConverter}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {$f_1$};
+  \node[above left] at (#2.south east) {$f_2$};
+}
+
+\newcommand{\FrequencyMultiplier}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {$f$};
+  \node[above left] at (#2.south east) {$nf$};
+}
+
+
+\newcommand{\FrequencyDivider}[2]{
+  \Transducer{#1}{#2}
+  \MakeRightDirected{#2}
+  \node[below right] at (#2.north west) {$f$};
+  \node[above left] at (#2.south east) {$\cfrac{f}{n}$};
+}
+
+\newcommand{\Splitter}[2]{ % Output nodes are at 30 and -30
+  \Device{#1}{#2}
+  \path (#2.center) ++ (-4mm, 0) coordinate (tempA);
+  \path (#2.center) ++ (+4mm, +3.46mm) coordinate (tempB);
+  \path (#2.center) ++ (+4mm, -3.46mm) coordinate (tempC);
+  \draw[ultra thick] (tempA) -- (#2.center) -- (tempB);
+  \draw[ultra thick] (tempA) -- (#2.center) -- (tempC);
+}
+
+\newcommand{\Line}[1][]{\draw[very thick, #1]}
