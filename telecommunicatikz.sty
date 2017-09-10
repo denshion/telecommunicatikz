@@ -114,7 +114,7 @@ telecommunications Devices pictograms]
 % Optional argument: text to put inside the box
 % \Device[Sample]{(0, 0)}{SampleDevice}
 \newcommand{\Device}[3][]{
-  \def\temp{#2}
+  \def\temp{#3}
   \ifx\temp\empty
     \PackageError{telecommunicatikz}{device node label can't be empty}{\Device
     accepts two mandatory arguments: center coordinates (like (0, 0)) and node
